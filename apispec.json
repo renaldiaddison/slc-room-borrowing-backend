@@ -1,0 +1,268 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SLC Room Borrowing",
+    "description": "API Spec for SLC Room Borrowing",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api"
+    }
+  ],
+  "paths": {
+    "/room-transactions": {
+      "get": {
+        "tags": [
+          "Room Transaction API"
+        ],
+        "description": "List All Room Transactions",
+        "summary": "List All Room Transactions",
+        "parameters": [
+          {
+            "name": "roomNumber",
+            "in": "query",
+            "description": "Room Number for Search Query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Get Room Transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RoomTransactionResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/room-transactions/active": {
+      "get": {
+        "tags": [
+          "Room Transaction API"
+        ],
+        "description": "List All Active Room Transactions",
+        "summary": "List All Active Room Transactions",
+        "parameters": [
+          {
+            "name": "roomNumber",
+            "in": "query",
+            "description": "Room Number for Search Query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Get Active Room Transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RoomTransactionResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/room-transactions/borrow": {
+      "post": {
+        "tags": [
+          "Room Transaction API"
+        ],
+        "description": "Borrow Room",
+        "summary": "Borrow Room",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoomTransactionBorrowCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success Borrow Room",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RoomTransactionResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/room-transactions/return": {
+      "post": {
+        "tags": [
+          "Room Transaction API"
+        ],
+        "description": "Return Room",
+        "summary": "Return Room",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoomTransactionReturnCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success Return Room",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/RoomTransactionResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RoomTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": false
+          },
+          "borrowerUsername": {
+            "type": "string",
+            "nullable": false
+          },
+          "borrowerDivision": {
+            "type": "string",
+            "nullable": false
+          },
+          "returnerUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "returnerDivision": {
+            "type": "string",
+            "nullable": true
+          },
+          "roomNumber": {
+            "type": "string",
+            "nullable": false
+          },
+          "roomIn": {
+            "type": "string",
+            "nullable": false
+          },
+          "roomOut": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RoomTransactionBorrowCreateRequest": {
+        "type": "object",
+        "properties": {
+          "borrowerUsername": {
+            "type": "string",
+            "nullable": false
+          },
+          "borrowerDivision": {
+            "type": "string",
+            "nullable": false
+          },
+          "roomNumber": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      },
+      "RoomTransactionReturnCreateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": false
+          },
+          "returnerUsername": {
+            "type": "string",
+            "nullable": false
+          },
+          "returnerDivision": {
+            "type": "string",
+            "nullable": false
+          },
+          "roomNumber": {
+            "type": "string",
+            "nullable": false
+          }
+        }
+      }
+    }
+  }
+}

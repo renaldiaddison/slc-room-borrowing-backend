@@ -3,16 +3,16 @@ package model
 import "time"
 
 type RoomTransactionBorrowCreateRequest struct {
-	BorrowerUsername string `json:"borrowerUsername"`
-	BorrowerDivision string `json:"borrowerDivision"`
-	RoomNumber       string `json:"roomNumber"`
+	BorrowerUsername string `validate:"required" json:"borrowerUsername"`
+	BorrowerDivision string `validate:"required" json:"borrowerDivision"`
+	RoomNumber       string `validate:"required" json:"roomNumber"`
 }
 
 type RoomTransactionReturnCreateRequest struct {
-	Id               string  `json:"id"`
-	ReturnerUsername *string `json:"returnerUsername"`
-	ReturnerDivision *string `json:"returnerDivision"`
-	RoomNumber       string  `json:"roomNumber"`
+	Id               string `validate:"required" json:"id"`
+	ReturnerUsername string `validate:"required" json:"returnerUsername"`
+	ReturnerDivision string `validate:"required" json:"returnerDivision"`
+	RoomNumber       string `validate:"required" json:"roomNumber"`
 }
 
 type RoomTransactionResponse struct {

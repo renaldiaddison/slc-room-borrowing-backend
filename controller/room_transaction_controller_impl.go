@@ -35,7 +35,6 @@ func (controller RoomTransactionControllerImpl) CreateRoomTransactionBorrow(writ
 func (controller RoomTransactionControllerImpl) CreateRoomTransactionReturn(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	roomTransactionReturnCreateRequest := model.RoomTransactionReturnCreateRequest{}
 	helper.ReadFromRequestBody(request, &roomTransactionReturnCreateRequest)
-
 	roomTransactionResponse := controller.RoomTransactionService.CreateRoomTransactionReturn(request.Context(), roomTransactionReturnCreateRequest)
 	webResponse := model.WebResponse{
 		Code:   200,
@@ -47,7 +46,8 @@ func (controller RoomTransactionControllerImpl) CreateRoomTransactionReturn(writ
 }
 
 func (controller RoomTransactionControllerImpl) FindActiveRoomTransaction(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	roomTransactionResponses := controller.RoomTransactionService.FindActiveRoomTransaction(request.Context())
+	searchQuery := request.URL.Query().Get("roomNumber")
+	roomTransactionResponses := controller.RoomTransactionService.FindActiveRoomTransaction(request.Context(), searchQuery)
 	webResponse := model.WebResponse{
 		Code:   200,
 		Status: "OK",
@@ -58,7 +58,8 @@ func (controller RoomTransactionControllerImpl) FindActiveRoomTransaction(writer
 }
 
 func (controller RoomTransactionControllerImpl) FindAllRoomTransaction(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	roomTransactionResponses := controller.RoomTransactionService.FindAllRoomTransaction(request.Context())
+	searchQuery := request.URL.Query().Get("roomNumber")
+	roomTransactionResponses := controller.RoomTransactionService.FindAllRoomTransaction(request.Context(), searchQuery)
 	webResponse := model.WebResponse{
 		Code:   200,
 		Status: "OK",

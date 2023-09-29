@@ -63,31 +63,36 @@ func (service RoomTransactionServiceImpl) CreateRoomTransactionReturn(ctx contex
 
 	roomTransaction, err := service.RoomTransactionRepository.FindRoomTransactionById(ctx, tx, request.Id)
 	if err != nil {
+
 		panic(exception.NewNotFoundError(err.Error()))
 	}
 
-	roomTransaction.ReturnerUsername = request.ReturnerUsername
-	roomTransaction.ReturnerDivision = request.ReturnerDivision
+	returnerUsername := request.ReturnerUsername
+	returnerDivision := request.ReturnerDivision
+
+	roomTransaction.ReturnerUsername = &returnerUsername
+	roomTransaction.ReturnerDivision = &returnerDivision
 	roomTransaction.RoomOut = timePtr
+
 	roomTransaction = service.RoomTransactionRepository.CreateRoomTransactionReturn(ctx, tx, roomTransaction)
 
 	return helper.ToRoomTransactionResponse(roomTransaction)
 }
 
-func (service RoomTransactionServiceImpl) FindActiveRoomTransaction(ctx context.Context) []model.RoomTransactionResponse {
+func (service RoomTransactionServiceImpl) FindActiveRoomTransaction(ctx context.Context, roomNumber string) []model.RoomTransactionResponse {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	activeRoomTransactions := service.RoomTransactionRepository.FindActiveRoomTransaction(ctx, tx)
+	activeRoomTransactions := service.RoomTransactionRepository.FindActiveRoomTransaction(ctx, tx, roomNumber)
 	return helper.ToRoomTransactionResponses(activeRoomTransactions)
 }
 
-func (service RoomTransactionServiceImpl) FindAllRoomTransaction(ctx context.Context) []model.RoomTransactionResponse {
+func (service RoomTransactionServiceImpl) FindAllRoomTransaction(ctx context.Context, roomNumber string) []model.RoomTransactionResponse {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	notActiveRoomTransactions := service.RoomTransactionRepository.FindActiveRoomTransaction(ctx, tx)
+	notActiveRoomTransactions := service.RoomTransactionRepository.FindAllRoomTransaction(ctx, tx, roomNumber)
 	return helper.ToRoomTransactionResponses(notActiveRoomTransactions)
 }
