@@ -19,10 +19,11 @@ type RoomTransactionServiceImpl struct {
 	Validate                  *validator.Validate
 }
 
-func NewRoomTransaction(roomTransactionRepository repository.RoomTransactionRepository, db *sql.DB) RoomTransactionService {
+func NewRoomTransaction(roomTransactionRepository repository.RoomTransactionRepository, db *sql.DB, validator *validator.Validate) RoomTransactionService {
 	return &RoomTransactionServiceImpl{
 		RoomTransactionRepository: roomTransactionRepository,
 		DB:                        db,
+		Validate:                  validator,
 	}
 }
 
