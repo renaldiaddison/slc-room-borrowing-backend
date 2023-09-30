@@ -25,3 +25,17 @@ func ToRoomTransactionResponses(roomTransactions []entities.RoomTransaction) []m
 	}
 	return roomTransactionResponses
 }
+
+func ToRoomResponse(room entities.Room) model.RoomResponse {
+	return model.RoomResponse{
+		RoomNumber: room.RoomNumber,
+	}
+}
+
+func ToRoomResponses(rooms []entities.Room) []model.RoomResponse {
+	var roomResponses []model.RoomResponse
+	for _, room := range rooms {
+		roomResponses = append(roomResponses, ToRoomResponse(room))
+	}
+	return roomResponses
+}

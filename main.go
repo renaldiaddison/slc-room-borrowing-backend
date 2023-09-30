@@ -25,10 +25,16 @@ func main() {
 
 	db := app.NewDatabase()
 	validate := validator.New()
+
+	roomRepository := repository.NewRoomRepository()
+	roomService := service.NewRoomService(roomRepository, db, validate)
+	roomController := controller.NewRoomController(roomService)
+
 	roomTransactionRepository := repository.NewRoomTransactionRepository()
 	roomTransactionService := service.NewRoomTransaction(roomTransactionRepository, db, validate)
 	roomTransactionController := controller.NewRoomTransaction(roomTransactionService)
-	router := app.NewRouter(roomTransactionController)
+
+	router := app.NewRouter(roomController, roomTransactionController)
 
 	log.Printf("Server is at http://localhost:%s/", port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
