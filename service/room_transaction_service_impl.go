@@ -14,13 +14,15 @@ import (
 )
 
 type RoomTransactionServiceImpl struct {
+	RoomRepository            repository.RoomRepository
 	RoomTransactionRepository repository.RoomTransactionRepository
 	DB                        *sql.DB
 	Validate                  *validator.Validate
 }
 
-func NewRoomTransaction(roomTransactionRepository repository.RoomTransactionRepository, db *sql.DB, validator *validator.Validate) RoomTransactionService {
+func NewRoomTransaction(roomRepository repository.RoomRepository, roomTransactionRepository repository.RoomTransactionRepository, db *sql.DB, validator *validator.Validate) RoomTransactionService {
 	return &RoomTransactionServiceImpl{
+		RoomRepository:            roomRepository,
 		RoomTransactionRepository: roomTransactionRepository,
 		DB:                        db,
 		Validate:                  validator,
