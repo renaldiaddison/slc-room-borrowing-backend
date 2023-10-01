@@ -11,13 +11,38 @@
     }
   ],
   "paths": {
+    "/rooms": {
+      "get": {
+        "tags": [
+          "Room API"
+        ],
+        "description": "List Rooms",
+        "summary": "List Rooms",
+        "parameters": [
+          {
+            "name": "roomNumber",
+            "in": "query",
+            "description": "Room Number for Search Query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Get Rooms"
+          }
+        }
+      }
+    },
     "/room-transactions": {
       "get": {
         "tags": [
           "Room Transaction API"
         ],
-        "description": "List All Room Transactions",
-        "summary": "List All Room Transactions",
+        "description": "List Room Transactions",
+        "summary": "List Room Transactions",
         "parameters": [
           {
             "name": "roomNumber",

@@ -59,3 +59,21 @@ func (service RoomServiceImpl) FindAllRoom(ctx context.Context, roomNumber strin
 	rooms := service.RoomRepository.FindAllRoom(ctx, tx, roomNumber)
 	return helper.ToRoomResponses(rooms)
 }
+
+func (service RoomServiceImpl) FindActiveRoom(ctx context.Context, roomNumber string) []model.RoomResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	rooms := service.RoomRepository.FindActiveRoom(ctx, tx, roomNumber)
+	return helper.ToRoomResponses(rooms)
+}
+
+func (service RoomServiceImpl) FindInactiveRoom(ctx context.Context, roomNumber string) []model.RoomResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	rooms := service.RoomRepository.FindInactiveRoom(ctx, tx, roomNumber)
+	return helper.ToRoomResponses(rooms)
+}

@@ -20,7 +20,7 @@ func NewRoomController(roomService service.RoomService) RoomController {
 
 func (controller RoomControllerImpl) CreateRoom(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	roomCreateRequest := model.RoomCreateRequest{}
-	helper.ReadFromRequestBody(request, roomCreateRequest)
+	helper.ReadFromRequestBody(request, &roomCreateRequest)
 
 	roomResponse := controller.RoomService.CreateRoom(request.Context(), roomCreateRequest)
 	webResponse := model.WebResponse{
@@ -45,6 +45,32 @@ func (controller RoomControllerImpl) DeleteRoom(writer http.ResponseWriter, requ
 func (controller RoomControllerImpl) FindAllRoom(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	searchQuery := request.URL.Query().Get("roomNumber")
 	roomResponses := controller.RoomService.FindAllRoom(request.Context(), searchQuery)
+
+	webResponse := model.WebResponse{
+		Code:   200,
+		Status: "OK",
+		Data:   roomResponses,
+	}
+
+	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func (controller RoomControllerImpl) FindActiveRoom(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	searchQuery := request.URL.Query().Get("roomNumber")
+	roomResponses := controller.RoomService.FindActiveRoom(request.Context(), searchQuery)
+
+	webResponse := model.WebResponse{
+		Code:   200,
+		Status: "OK",
+		Data:   roomResponses,
+	}
+
+	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func (controller RoomControllerImpl) FindInactiveRoom(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	searchQuery := request.URL.Query().Get("roomNumber")
+	roomResponses := controller.RoomService.FindInactiveRoom(request.Context(), searchQuery)
 
 	webResponse := model.WebResponse{
 		Code:   200,
