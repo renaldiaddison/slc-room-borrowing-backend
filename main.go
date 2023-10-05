@@ -9,9 +9,10 @@ import (
 	"net/http"
 	"os"
 
-	//"github.com/renaldiaddison/roomborrowingbackend/middleware"
 	"github.com/renaldiaddison/roomborrowingbackend/repository"
 	"github.com/renaldiaddison/roomborrowingbackend/service"
+	//"github.com/renaldiaddison/roomborrowingbackend/middleware"
+	"github.com/rs/cors"
 )
 
 const defaultPort = "8080"
@@ -36,6 +37,8 @@ func main() {
 
 	router := app.NewRouter(roomController, roomTransactionController)
 
+	handler := cors.Default().Handler(router)
+
 	log.Printf("Server is at http://localhost:%s/", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
