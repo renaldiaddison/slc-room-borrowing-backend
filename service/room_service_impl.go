@@ -39,13 +39,13 @@ func (service RoomServiceImpl) CreateRoom(ctx context.Context, request model.Roo
 	return helper.ToRoomResponse(room)
 }
 
-func (service RoomServiceImpl) DeleteRoom(ctx context.Context, roomNumber string) {
+func (service RoomServiceImpl) DeleteRoom(ctx context.Context, request model.RoomDeleteRequest) {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
 	room := entities.Room{
-		RoomNumber: roomNumber,
+		RoomNumber: request.RoomNumber,
 	}
 
 	service.RoomRepository.DeleteRoom(ctx, tx, room)

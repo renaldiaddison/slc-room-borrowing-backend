@@ -24,7 +24,7 @@ func NewRouter(roomController controller.RoomController, roomTransactionControll
 
 	router.POST("/api/rooms", roomController.CreateRoom)
 	router.GET("/api/rooms", roomController.FindAllRoom)
-	router.DELETE("/api/rooms/:roomNumber", roomController.DeleteRoom)
+	router.DELETE("/api/rooms", roomController.DeleteRoom)
 	router.GET("/api/rooms/active", roomController.FindActiveRoom)
 	router.GET("/api/rooms/inactive", roomController.FindInactiveRoom)
 
