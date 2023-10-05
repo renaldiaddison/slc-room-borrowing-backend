@@ -40,13 +40,15 @@ func (service RoomServiceImpl) CreateRoom(ctx context.Context, request model.Roo
 }
 
 func (service RoomServiceImpl) DeleteRoom(ctx context.Context, request model.RoomDeleteRequest) {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	room := entities.Room{
-		RoomNumber: request.RoomNumber,
-	}
+	room, err := service.RoomRepository.FindRoomById(ctx, tx, request.RoomNumber)
+	helper.PanicIfError(err)
 
 	service.RoomRepository.DeleteRoom(ctx, tx, room)
 }

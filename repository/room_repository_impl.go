@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/renaldiaddison/roomborrowingbackend/entities"
+	"github.com/renaldiaddison/roomborrowingbackend/exception"
 	"github.com/renaldiaddison/roomborrowingbackend/helper"
 )
 
@@ -88,4 +89,25 @@ func (repository RoomRepositoryImpl) FindInactiveRoom(ctx context.Context, tx *s
 	}
 
 	return rooms
+}
+
+func (repository RoomRepositoryImpl) FindRoomById(ctx context.Context, tx *sql.Tx, roomNumber string) (entities.Room, error) {
+	SQL := "SELECT * FROM rooms WHERE `room_number` = ?"
+	rows, err := tx.QueryContext(ctx, SQL, roomNumber)
+
+	helper.PanicIfError(err)
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		helper.PanicIfError(err)
+	}(rows)
+
+	room := entities.Room{}
+	if rows.Next() {
+
+		err := rows.Scan(&room.RoomNumber)
+		helper.PanicIfError(err)
+		return room, nil
+	} else {
+		return room, exception.NewNotFoundError("room not found")
+	}
 }

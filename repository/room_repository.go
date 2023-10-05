@@ -12,4 +12,5 @@ type RoomRepository interface {
 	FindAllRoom(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.Room
 	FindActiveRoom(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.Room
 	FindInactiveRoom(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.Room
+	FindRoomById(ctx context.Context, tx *sql.Tx, roomNumber string) (entities.Room, error)
 }

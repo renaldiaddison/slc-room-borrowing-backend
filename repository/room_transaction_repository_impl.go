@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"github.com/renaldiaddison/roomborrowingbackend/entities"
+	"github.com/renaldiaddison/roomborrowingbackend/exception"
 	"github.com/renaldiaddison/roomborrowingbackend/helper"
 )
 
@@ -46,7 +46,7 @@ func (repository *RoomTransactionRepositoryImpl) FindRoomTransactionById(ctx con
 		helper.PanicIfError(err)
 		return roomTransaction, nil
 	} else {
-		return roomTransaction, errors.New("room transaction not found")
+		return roomTransaction, exception.NewNotFoundError("room transaction not found")
 	}
 }
 

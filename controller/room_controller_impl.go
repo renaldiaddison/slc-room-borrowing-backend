@@ -28,6 +28,7 @@ func (controller RoomControllerImpl) CreateRoom(writer http.ResponseWriter, requ
 		Status: "OK",
 		Data:   roomResponse,
 	}
+	
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
@@ -40,6 +41,7 @@ func (controller RoomControllerImpl) DeleteRoom(writer http.ResponseWriter, requ
 		Code:   200,
 		Status: "OK",
 	}
+
 	helper.WriteToResponseBody(writer, webResponse)
 }
 
