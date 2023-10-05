@@ -39,14 +39,16 @@ func (service RoomServiceImpl) CreateRoom(ctx context.Context, request model.Roo
 	return helper.ToRoomResponse(room)
 }
 
-func (service RoomServiceImpl) DeleteRoom(ctx context.Context, roomNumber string) {
+func (service RoomServiceImpl) DeleteRoom(ctx context.Context, request model.RoomDeleteRequest) {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	room := entities.Room{
-		RoomNumber: roomNumber,
-	}
+	room, err := service.RoomRepository.FindRoomById(ctx, tx, request.RoomNumber)
+	helper.PanicIfError(err)
 
 	service.RoomRepository.DeleteRoom(ctx, tx, room)
 }
@@ -57,5 +59,23 @@ func (service RoomServiceImpl) FindAllRoom(ctx context.Context, roomNumber strin
 	defer helper.CommitOrRollback(tx)
 
 	rooms := service.RoomRepository.FindAllRoom(ctx, tx, roomNumber)
+	return helper.ToRoomResponses(rooms)
+}
+
+func (service RoomServiceImpl) FindActiveRoom(ctx context.Context, roomNumber string) []model.RoomResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	rooms := service.RoomRepository.FindActiveRoom(ctx, tx, roomNumber)
+	return helper.ToRoomResponses(rooms)
+}
+
+func (service RoomServiceImpl) FindInactiveRoom(ctx context.Context, roomNumber string) []model.RoomResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIfError(err)
+	defer helper.CommitOrRollback(tx)
+
+	rooms := service.RoomRepository.FindInactiveRoom(ctx, tx, roomNumber)
 	return helper.ToRoomResponses(rooms)
 }
