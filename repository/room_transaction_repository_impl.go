@@ -50,6 +50,25 @@ func (repository *RoomTransactionRepositoryImpl) FindRoomTransactionById(ctx con
 	}
 }
 
+func (repository *RoomTransactionRepositoryImpl) FindOneActiveRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string) (entities.RoomTransaction, error) {
+	SQL := "SELECT * FROM roomtransactions WHERE room_out IS NULL AND room_number = ?"
+	rows, err := tx.QueryContext(ctx, SQL, roomNumber)
+	helper.PanicIfError(err)
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		helper.PanicIfError(err)
+	}(rows)
+
+	var activeRoomTransaction entities.RoomTransaction
+	if rows.Next() {
+		err := rows.Scan(&activeRoomTransaction.Id, &activeRoomTransaction.BorrowerUsername, &activeRoomTransaction.BorrowerDivision, &activeRoomTransaction.ReturnerUsername, &activeRoomTransaction.ReturnerDivision, &activeRoomTransaction.RoomNumber, &activeRoomTransaction.RoomIn, &activeRoomTransaction.RoomOut)
+		helper.PanicIfError(err)
+		return activeRoomTransaction, nil
+	} else {
+		return activeRoomTransaction, exception.NewNotFoundError("room transaction not found")
+	}
+}
+
 func (repository *RoomTransactionRepositoryImpl) FindActiveRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.RoomTransaction {
 	roomNumber = roomNumber + "%"
 	SQL := "SELECT * FROM roomtransactions WHERE room_out IS NULL AND room_number LIKE ?"

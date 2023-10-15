@@ -12,4 +12,5 @@ type RoomTransactionRepository interface {
 	FindActiveRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.RoomTransaction
 	FindAllRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.RoomTransaction
 	FindRoomTransactionById(ctx context.Context, tx *sql.Tx, roomTransactionId string) (entities.RoomTransaction, error)
+	FindOneActiveRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string) (entities.RoomTransaction, error)
 }

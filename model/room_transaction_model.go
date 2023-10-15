@@ -9,7 +9,6 @@ type RoomTransactionBorrowCreateRequest struct {
 }
 
 type RoomTransactionReturnCreateRequest struct {
-	Id               string `validate:"required" json:"id"`
 	ReturnerUsername string `validate:"required" json:"returnerUsername"`
 	ReturnerDivision string `validate:"required" json:"returnerDivision"`
 	RoomNumber       string `validate:"required" json:"roomNumber"`
