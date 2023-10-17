@@ -89,10 +89,11 @@ func (repository *RoomTransactionRepositoryImpl) FindActiveRoomTransaction(ctx c
 
 	return activeRoomTransactions
 }
-func (repository *RoomTransactionRepositoryImpl) FindAllRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string) []entities.RoomTransaction {
+func (repository *RoomTransactionRepositoryImpl) FindAllRoomTransaction(ctx context.Context, tx *sql.Tx, roomNumber string, date string) []entities.RoomTransaction {
 	roomNumber = roomNumber + "%"
-	SQL := "SELECT * FROM roomtransactions WHERE room_number LIKE ?"
-	rows, err := tx.QueryContext(ctx, SQL, roomNumber)
+	date = date + "%"
+	SQL := "SELECT * FROM roomtransactions WHERE room_number LIKE ? AND DATE(room_in) LIKE ?"
+	rows, err := tx.QueryContext(ctx, SQL, roomNumber, date)
 	helper.PanicIfError(err)
 	defer func(rows *sql.Rows) {
 		err := rows.Close()

@@ -58,8 +58,9 @@ func (controller RoomTransactionControllerImpl) FindActiveRoomTransaction(writer
 }
 
 func (controller RoomTransactionControllerImpl) FindAllRoomTransaction(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	searchQuery := request.URL.Query().Get("roomNumber")
-	roomTransactionResponses := controller.RoomTransactionService.FindAllRoomTransaction(request.Context(), searchQuery)
+	roomNumberQuery := request.URL.Query().Get("roomNumber")
+	dateQuery := request.URL.Query().Get("date")
+	roomTransactionResponses := controller.RoomTransactionService.FindAllRoomTransaction(request.Context(), roomNumberQuery, dateQuery)
 	webResponse := model.WebResponse{
 		Code:   200,
 		Status: "OK",

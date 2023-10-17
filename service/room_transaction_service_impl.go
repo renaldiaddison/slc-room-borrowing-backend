@@ -84,11 +84,11 @@ func (service RoomTransactionServiceImpl) FindActiveRoomTransaction(ctx context.
 	return helper.ToRoomTransactionResponses(activeRoomTransactions)
 }
 
-func (service RoomTransactionServiceImpl) FindAllRoomTransaction(ctx context.Context, roomNumber string) []model.RoomTransactionResponse {
+func (service RoomTransactionServiceImpl) FindAllRoomTransaction(ctx context.Context, roomNumber string, date string) []model.RoomTransactionResponse {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	roomTransactions := service.RoomTransactionRepository.FindAllRoomTransaction(ctx, tx, roomNumber)
+	roomTransactions := service.RoomTransactionRepository.FindAllRoomTransaction(ctx, tx, roomNumber, date)
 	return helper.ToRoomTransactionResponses(roomTransactions)
 }
