@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"time"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/renaldiaddison/roomborrowingbackend/entities"
@@ -10,7 +13,6 @@ import (
 	"github.com/renaldiaddison/roomborrowingbackend/helper"
 	"github.com/renaldiaddison/roomborrowingbackend/model"
 	"github.com/renaldiaddison/roomborrowingbackend/repository"
-	"time"
 )
 
 type RoomTransactionServiceImpl struct {
@@ -36,14 +38,16 @@ func (service RoomTransactionServiceImpl) CreateRoomTransactionBorrow(ctx contex
 	defer helper.CommitOrRollback(tx)
 
 	roomTransaction := entities.RoomTransaction{
-		Id:               uuid.New().String(),
-		BorrowerUsername: request.BorrowerUsername,
-		BorrowerDivision: request.BorrowerDivision,
-		ReturnerUsername: nil,
-		ReturnerDivision: nil,
-		RoomNumber:       request.RoomNumber,
-		RoomIn:           time.Now(),
-		RoomOut:          nil,
+		Id:                   uuid.New().String(),
+		BorrowerUsername:     request.BorrowerUsername,
+		BorrowerDivision:     request.BorrowerDivision,
+		BorrowerIdentityCode: request.BorrowerIdentityCode,
+		ReturnerUsername:     nil,
+		ReturnerDivision:     nil,
+		ReturnerIdentityCode: nil,
+		RoomNumber:           request.RoomNumber,
+		RoomIn:               time.Now(),
+		RoomOut:              nil,
 	}
 
 	roomTransaction = service.RoomTransactionRepository.CreateRoomTransactionBorrow(ctx, tx, roomTransaction)
@@ -67,10 +71,13 @@ func (service RoomTransactionServiceImpl) CreateRoomTransactionReturn(ctx contex
 	timePtr := &now
 	returnerUsername := request.ReturnerUsername
 	returnerDivision := request.ReturnerDivision
+	returnerIdentityCode := request.ReturnerIdentityCode
 	roomTransaction.ReturnerUsername = &returnerUsername
 	roomTransaction.ReturnerDivision = &returnerDivision
+	roomTransaction.ReturnerIdentityCode = &returnerIdentityCode
 	roomTransaction.RoomOut = timePtr
 
+	fmt.Println(roomTransaction.ReturnerIdentityCode)
 	roomTransaction = service.RoomTransactionRepository.CreateRoomTransactionReturn(ctx, tx, roomTransaction)
 	return helper.ToRoomTransactionResponse(roomTransaction)
 }
@@ -84,11 +91,11 @@ func (service RoomTransactionServiceImpl) FindActiveRoomTransaction(ctx context.
 	return helper.ToRoomTransactionResponses(activeRoomTransactions)
 }
 
-func (service RoomTransactionServiceImpl) FindAllRoomTransaction(ctx context.Context, roomNumber string) []model.RoomTransactionResponse {
+func (service RoomTransactionServiceImpl) FindAllRoomTransaction(ctx context.Context, roomNumber string, date string) []model.RoomTransactionResponse {
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
-	roomTransactions := service.RoomTransactionRepository.FindAllRoomTransaction(ctx, tx, roomNumber)
+	roomTransactions := service.RoomTransactionRepository.FindAllRoomTransaction(ctx, tx, roomNumber, date)
 	return helper.ToRoomTransactionResponses(roomTransactions)
 }
